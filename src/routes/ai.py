@@ -1,7 +1,7 @@
 from openai import OpenAI
 from flask import Response
 client = OpenAI(
-    api_key="sk-2aa6f9b1d1f4447493ca9dacb71e4b34",
+    api_key="XXXX",
     base_url="https://api.deepseek.com"
 )
 
