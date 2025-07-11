@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title }} - 如何使用 AED</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #1e88e5, #1565c0);
+            color: white;
+            padding: 80px 0 20px 0;
+        }
+        .content-section {
+            padding: 40px 0;
+        }
+        .step-card {
+            border-left: 4px solid #1e88e5;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .step-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step-number {
+            color: #1e88e5;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-illustration {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+        .step-illustration:hover {
+            transform: scale(1.02);
+        }
+        .important-tips {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 40px;
+            border-left: 4px solid #ffc107;
+        }
+        .icon-large {
+            font-size: 2.5rem;
+            color: #1e88e5;
+            margin-bottom: 1rem;
+        }
+        .step-content {
+            margin-top: 15px;
+        }
+        .step-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main_page') }}">
+            <i class="bi bi-heart-pulse"></i> {{ title }}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main_page') }}">主页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('contact') }}">联系我们</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div style="margin-top: 100px;"></div>
+
+<!-- Content Section -->
+<section class="content-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Step 1 -->
+                <div class="step-card">
+                    <div class="step-number">
+                        <i class="bi"></i>
+                        <span>1. 迅速获取 AED</span>
+                    </div>
+                    <div class="step-content">
+                        <p>当发现有人心脏骤停，周围又有 AED 设备时，第一时间跑过去找到 AED。</p>
+                    </div>
+                    <div class="step-actions">
+                        <strong>注意:</strong>
+                        <ul>
+                            <li>有些 AED 的盖子可以直接打开，而部分设备则需要先按下电源键开启。</li>
+                            <li>这一步一定要快，每一秒都至关重要。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card">
+                    <div class="step-number">
+                        <i class="bi"></i>
+                        <span>2. 正确粘贴电极片</span>
+                    </div>
+                    <div class="step-content">
+                        <p>打开 AED 后，会看到电极片。撕开电极片的包装，按照 AED 机身上清晰的图示来粘贴。</p>
+                    </div>
+                    <div class="step-actions">
+                        <strong>注意:</strong>
+                        <ul>
+                            <li>一片要贴在患者胸部右上方，也就是锁骨下方的位置</li>
+                            <li>另一片则贴在左乳头外侧。这个位置的选择是经过科学设计的，能确保电流有效通过心脏，达到除颤的目的</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card">
+                    <div class="step-number">
+                        <i class="bi"></i>
+                        <span>3. 让 AED 分析心律</span>
+                    </div>
+                    <div class="step-content">
+                        <p>电极片贴好后，AED 会自动开始分析患者的心律。</p>
+                    </div>
+                    <div class="step-actions">
+                        <strong>注意:</strong>
+                        <ul>
+                            <li>此时，你要大声喊出 “大家别碰患者”，保证周围环境安静，没有其他人接触患者，这样才能让 AED 准确地分析心律。因为外界的干扰可能会影响 AED 的判断结果。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card">
+                    <div class="step-number">
+                        <i class="bi"></i>
+                        <span>4. 果断除颤</span>
+                    </div>
+                    <div class="step-content">
+                        <p>如果 AED 分析后提示需要除颤，它会自动进行充电。等充电完成，屏幕上会有提示，这时毫不犹豫地按下除颤键。</p>
+                    </div>
+                    <div class="step-actions">
+                        <strong>注意:</strong>
+                        <ul>
+                            <li>除颤瞬间会释放强大电流，尝试让心脏恢复正常节律，请不要接触患者。</li>
+                            <li>这一下可能会让患者身体有明显反应，但这是为了重启心脏跳动。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-card">
+                    <div class="step-number">
+                        <i class="bi"></i>
+                        <span>5. 持续心肺复苏</span>
+                    </div>
+                    <div class="step-content">
+                        <p>除颤之后，不要停顿，马上继续进行心肺复苏。</p>
+                    </div>
+                    <div class="step-actions">
+                        <strong>注意:</strong>
+                        <ul>
+                            <li>持续按压患者胸部，按照每分钟 100 - 120 次的频率，按压深度约 5 - 6 厘米。</li>
+                            <li>大约 2 分钟后，AED 会再次自动分析是否还需要除颤。</li>
+                            <li>就这样不断重复操作，直到专业医护人员赶到现场接手。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Important Tips Section -->
+                <div class="important-tips animate__animated animate__fadeIn">
+                    <h4 class="mb-4">注意事项
+                        <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>确保电极片位置干燥，避免潮湿和多汗。</li>
+                                <li>在进行除颤时，确保没有人与患者接触，以避免电击</li>
+                                <li>确认患者无反应、无脉搏、无呼吸后再使用AED。</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>确保周围环境安全，避免二次伤害。</li>
+                                <li>不要在水中使用AED，患者胸部如有汗水需快速擦干</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+        <p class="mb-0">&copy; 2025 {{ title }}. All rights reserved. 救在眼前项目组</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Intersection Observer for step cards
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.2,
+        rootMargin: '0px 0px -100px 0px'
+    });
+
+    document.querySelectorAll('.step-card').forEach((card, index) => {
+        setTimeout(() => {
+            observer.observe(card);
+        }, index * 200);
+    });
+
+    // Optional: Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+</body>
+</html>

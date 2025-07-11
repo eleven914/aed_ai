@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+<div id="map" style="height: 100vh; width: 100%;"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('初始化地图');
+    const map = L.map('map').setView([34.746931, 113.613692], 12);
+    console.log('地图初始化完成');
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    function createCarouselHTML(images, aedId) {
+        let html = `
+        <div id="carousel-${aedId}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">`;
+
+        images.forEach((img, index) => {
+            html += `
+                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                    <img src="${img}" class="d-block w-100" alt="图片 ${index + 1}">
+                </div>`;
+        });
+
+        html += `
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${aedId}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-${aedId}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>`;
+
+        return html;
+    }
+
+    // 示例数据
+    const aedData = {
+        id: 1,
+        name: "AED 设备",
+        address: "测试地址",
+        coordinates: [34.746931, 113.613692],
+        images_url: [
+            "https://via.placeholder.com/300x200?text=Image+1",
+            "https://via.placeholder.com/300x200?text=Image+2"
+        ]
+    };
+
+    const marker = L.marker(aedData.coordinates).addTo(map);
+    marker.bindPopup(`
+        <strong>${aedData.name}</strong><br>
+        ${aedData.address}<br>
+        ${createCarouselHTML(aedData.images_url, aedData.id)}
+    `);
+
+    map.openPopup(marker.getPopup());
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{{ title }}</title>
+  <link rel="icon" href="https://t3.ftcdn.net/jpg/02/33/47/40/360_F_233474036_NMfkCNkCaQq6eIIYuSg6CwcYWIWfPFNd.jpg" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Find the nearest Automated External Defibrillator (AED) locations in Zhengzhou. Quick access to life-saving equipment with real-time locations, visual guidance, and detailed information.">
+  <meta name="keywords" content="AED, Zhengzhou, China, 河南, 郑州, 中国, China, defibrillator locations, emergency services, medical equipment, public health, first aid, cardiac emergency, Zhengzhou">
+  <meta name="author" content="救在眼前项目组">
+  <meta name="robots" content="index, follow">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <style>
+    @media (max-width: 768px) {
+      .hero-section .col-lg-6:last-child {
+        display: none;
+      }
+      .hero-section .col-lg-6:first-child {
+        width: 100%;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .hero-section {
+        min-height: 60vh;
+        padding: 60px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero-section .btn {
+        margin: 0 auto;
+        display: block;
+      }
+      .hero-section .display-4 {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+      }
+      .hero-section .lead {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+    }
+
+    .hero-section {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('assets/illustration/img.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      padding: 100px 0;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .feature-card {
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-20px);
+    }
+
+    .icon-large {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #1e88e5;
+    }
+
+    .screenshot {
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.5s ease-in-out;
+      transform: perspective(1000px) rotateY(-5deg);
+      backdrop-filter: blur(30px);
+      position: relative;
+    }
+
+    .screenshot:hover {
+      transform: perspective(1000px) rotateY(15deg) translateY(-20px);
+    }
+
+    .screenshot img {
+      border-radius: 20px;
+      width: 100%;
+      height: auto;
+      backdrop-filter: blur(30px);
+      transition: all 0.5s ease-in-out;
+    }
+
+    .screenshot img:hover {
+      border-radius: 20px;
+      backdrop-filter: blur(30px);
+      transform: scale(1.1);
+    }
+
+    @keyframes float {
+      0% { transform: perspective(1000px) rotateY(-5deg) translateY(0); }
+      50% { transform: perspective(1000px) rotateY(5deg) translateY(-10px); }
+      100% { transform: perspective(1000px) rotateY(-5deg) translateY(0); }
+    }
+
+    .screenshot:hover {
+      animation-play-state: paused;
+    }
+
+    .fade-in {
+      animation: fadeIn 10s ease-in;
+      border-radius: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 60px 0;
+        min-height: auto;
+      }
+
+      .hero-content {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .display-4 {
+        font-size: 2rem;
+      }
+
+      .lead {
+        font-size: 1.1rem;
+      }
+
+      .screenshot {
+        margin-top: 30px;
+        transform: none !important;
+      }
+
+      .screenshot:hover {
+        transform: none !important;
+      }
+
+      .feature-card {
+        margin-bottom: 20px;
+      }
+
+      .icon-large {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (hover: none) {
+      .feature-card:hover,
+      .screenshot:hover,
+      .screenshot img:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-nav {
+        text-align: center;
+        padding: 10px 0;
+      }
+
+      .nav-item {
+        padding: 5px 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 40px 0;
+      }
+
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+
+    :root {
+      --base-font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --base-font-size: 14px;
+      }
+    }
+
+    body {
+      font-size: var(--base-font-size);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 3s infinite;
+    }
+  </style>
+</head>
+<body onload="sessionStorage.removeItem('modalShown');">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('main_page') }}">
+      <i class="bi bi-heart-pulse"></i> {{ title }}
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('how_to_use_aed') }}">如何使用AED</a>
+        </li>
+        <li class="nav-item">
+           <a class="nav-link" href="{{ url_for('about') }}">关于</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('contact') }}">联系我们</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('ai_assistant') }}">智能科普助手</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section d-flex align-items-center">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 animate__animated animate__fadeInLeft">
+  <h1 class="display-4 fw-bold mb-4">AED快速定位与导引</h1>
+  <p class="lead mb-4">快速获取郑州市自动体外除颤器（AED）的位置信息。在紧急情况下，每一秒都至关重要。</p>
+  <div class="d-flex align-items-start gap-3">  <!-- 关键修改 -->
+    <a href="{{ url_for('locate_aed') }}" class="btn btn-light btn-lg pulse">查找附近的AED</a>
+    <a href="{{ url_for('aed.submit_aed') }}" class="btn btn-primary btn-lg pulse">提交AED位置信息</a>
+  </div>
+</div>
+      <div class="col-lg-6 animate__animated animate__fadeInRight">
+        <img src="{{ url_for('static', filename='screenshot.png') }}" alt="AED Location Map" class="screenshot img-fluid rounded shadow">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4">
+  <div class="container text-center">
+    <p class="mb-0">&copy; 2025 {{ title }}. All rights reserved. 救在眼前项目组</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Modal functionality (示例)
+    const modalEl = document.getElementById('sponsorshipModal');
+    let sponsorshipModal = null;
+
+    if (modalEl) {
+      sponsorshipModal = new bootstrap.Modal(modalEl);
+
+      window.addEventListener('scroll', () => {
+        if (!sessionStorage.getItem('modalShown') && window.scrollY > 1) {
+          sponsorshipModal.show();
+          sessionStorage.setItem('modalShown', 'true');
+        }
+      });
+    }
+
+    function testModal() {
+      if (modalEl && !sponsorshipModal) {
+        sponsorshipModal = new bootstrap.Modal(modalEl);
+      }
+      if (sponsorshipModal) {
+        sponsorshipModal.show();
+      }
+    }
+
+    console.log(navigator.language || navigator.userLanguage);
+  });
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register("{{ url_for('static', filename='scripts/sw.js') }}")
+        .then(registration => {
+          console.log('ServiceWorker registered:', registration);
+        })
+        .catch(error => {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+ // Fetch and display AED locations
+  fetch('{{ url_for("aed.get_all_aeds") }}')
+    .then(response => {
+      if (!response.ok) throw new Error('网络响应异常');
+      return response.json();
+    })
+    .then(data => {
+      console.log('获取到的数据:', data);
+      if (!Array.isArray(data)) {
+        console.error('返回的数据不是数组');
+        return;
+      }
+
+      data.forEach(aed => {
+        console.log('处理 AED 数据:', aed);
+        const match = aed.location.match(/POINT\(([\d.-]+) ([\d.-]+)\)/);
+        if (!match) {
+          console.error(`无法解析坐标: ${aed.location}`);
+          return;
+        }
+
+        const lat = parseFloat(match[2]);
+        const lng = parseFloat(match[1]);
+        console.log('解析后的经纬度:', lat, lng);
+
+        if (isNaN(lat) || isNaN(lng)) {
+          console.error(`无效的经纬度: ${lat}, ${lng}`);
+          return;
+        }
+
+        // 构建弹窗内容
+        let popupContent = `
+          <div class="popup-content">
+            <h5>${aed.name}</h5>
+            <p><strong>地址:</strong> ${aed.address}</p>
+        `;
+
+        if (aed.images_url && aed.images_url.length > 0) {
+          if (aed.images_url.length === 1) {
+            popupContent += `<div class="popup-images"><img src="${aed.images_url[0]}" alt="位置图片"></div>`;
+          } else {
+            popupContent += createCarouselHTML(aed.images_url, aed.id);
+          }
+        }
+
+     popupContent += `
+    <div class="mt-2">
+    <a href="https://uri.amap.com/navigation?to=${lat},${lng}"
+       class="btn btn-primary w-100" target="_blank">
+      <i class="bi bi-geo-alt"></i> 使用 高德 地图导航
+    </a>
+     </div>
+</div>`;
+
+        console.log('弹出窗口内容:', popupContent);
+
+        const popup = L.popup({
+          className: 'custom-popup',
+          maxWidth: 300,
+          minWidth: 250
+        }).setContent(popupContent);
+
+        const marker = L.marker([lat, lng]).bindPopup(popup).addTo(map);
+        marker.openPopup(); // 手动打开弹出窗口
+
+        marker.on('popupopen', () => {
+          if (aed.images_url && aed.images_url.length > 1) {
+            new bootstrap.Carousel(document.querySelector(`#carousel-${aed.id}`));
+          }
+        });
+      });
+    })
+    .catch(error => {
+      console.error('加载 AED 数据失败:', error);
+    });
+});
